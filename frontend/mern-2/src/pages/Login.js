@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { MailOutlined, GoogleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
+// axios
+
+import axios from "axios";
 
 
 const Login = ({ history }) => {
@@ -22,33 +25,60 @@ const Login = ({ history }) => {
   }, [user]);
 
 
-
   let dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    // console.table(email, password);
-    try {
-      const result = await auth.signInWithEmailAndPassword(email, password);
-      // console.log(result);
-      const { user } = result;
-      const idTokenResult = await user.getIdTokenResult();
 
-      dispatch({
-        type: "LOGGED_IN_USER",
-        payload: {
-          email: user.email,
-          token: idTokenResult.token,
-        },
-      });
-      history.push("/");
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-      setLoading(false);
+// send user info to backend to sava in database
+
+const createOrUpdateUser = async (authtoken) => {
+  return await axios.post(
+    `http://localhost:5000/api/create-or-update-user`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
     }
-  };
+  );
+};
+
+
+
+// login in user
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  // console.table(email, password);
+  try {
+    const result = await auth.signInWithEmailAndPassword(email, password);
+    // console.log(result);
+    const { user } = result;
+    const idTokenResult = await user.getIdTokenResult();
+
+
+    // send user token to backend firebase-admin
+    createOrUpdateUser(idTokenResult.token)
+      .then((res) => console.log("CREATE OR UPDATE RES", res))
+      .catch();
+
+    // dispatch({
+    //   type: "LOGGED_IN_USER",
+    //   payload: {
+    //     email: user.email,
+    //     token: idTokenResult.token,
+    //   },
+    // });
+    // history.push("/");
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
+    setLoading(false);
+  }
+};
+
+
 
 
 
