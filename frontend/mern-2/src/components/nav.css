@@ -1,0 +1,14 @@
+.nav-container{
+display:flex;
+justify-content: space-between;
+
+
+}
+
+
+
+.right-nav{
+margin-right: 100px;
+display: flex;
+width: 140px;
+}
