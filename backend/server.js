@@ -4,16 +4,37 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const cookieParser = require('cookie-parser')
-const path = require('path')
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+
+require("dotenv").config();
+
+// routes
+const authRoutes = require("./routes/auth");
 
 
 const app = express()
+app.use(morgan("dev"));
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
 app.use(fileUpload({
     useTempFiles: true
 }))
+
+
+// route
+app.get("/api", (req, res) => {
+    res.json({
+      data: "hey you hit node API",
+    });
+  });
+
+
+
+
+  // routes middleware
+app.use("/api", authRoutes);
 
 
 
@@ -30,25 +51,6 @@ mongoose
      
     })
     .then(() => console.log('DB Connected'));
-
-
-
-
-
-
-
-
-
-    
-    
-
-
-
-
-
-
-
-
 
 
 
