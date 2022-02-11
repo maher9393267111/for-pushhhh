@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect,useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import { Container } from 'react-bootstrap'
 import Header from './components/Header'
@@ -12,7 +13,40 @@ import Overlay from "./components/overlay";
 import Register from "./components/auth/Register";
 import Login from './pages/Login'
 
+
+import { auth } from "./firebase";
+import { useDispatch } from "react-redux";
+
+
+
 function App(props) {
+
+  const dispatch = useDispatch(); // action method
+
+
+// to check firebase auth state
+useEffect(() => {
+  const unsubscribe = auth.onAuthStateChanged(async (user) => { // current user login
+    if (user) {
+
+      // user token
+      const idTokenResult = await user.getIdTokenResult();
+      console.log("user", user);
+      dispatch({
+        type: "LOGGED_IN_USER",
+        payload: {
+          email: user.email,
+          token: idTokenResult.token,
+        },
+      });
+    }
+  });
+  // cleanup
+  return () => unsubscribe();
+}, []);
+
+
+
   return (
     <div>
 
