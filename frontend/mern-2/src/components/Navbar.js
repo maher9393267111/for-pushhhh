@@ -1,53 +1,43 @@
-import './nav.css'
-
-import React from "react";
+import React, { useState } from "react";
+import { Menu } from "antd";
 import {
-  Navbar,
-  Nav,
-  Col,
-  Form,
-  FormControl,
-  NavDropdown,
-  Button
-} from "react-bootstrap";
-export default () => {
+  AppstoreOutlined,
+  SettingOutlined,
+  UserOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
+import { Link } from "react-router-dom";
+
+const { SubMenu, Item } = Menu;
+
+const Header = () => {
+  const [current, setCurrent] = useState("home");
+
+  const handleClick = (e) => {
+    // console.log(e.key);
+    setCurrent(e.key);
+  };
+
   return (
-    <Navbar className="nav-container" bg="light" expand="lg">
-     
-    
-      <Navbar.Brand href="#home">mern SHOPPING</Navbar.Brand>
-    
-      
-       
-        <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-         
-        </Form>
+    <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
+      <Item key="home" icon={<AppstoreOutlined />}>
+        <Link to="/">Home</Link>
+      </Item>
 
-<div className="right-nav">
-  
-<div className="icon" style={{marginRight:'30px'}}>
-<i className="fa-solid fa-cart-shopping"></i>
-</div>
+      <Item key="register" icon={<UserAddOutlined />} className="float-right">
+        <Link to="/register">Register</Link>
+      </Item>
 
+      <Item key="login" icon={<UserOutlined />} className="float-right">
+        <Link to="/login">Login</Link>
+      </Item>
 
-
-<div className="login">
-    <span><i class="fa-regular fa-user"></i> </span>
-    Login
-</div>
-
-
-
-
-</div>
-
-
-
-
-
-
-
-    </Navbar>
+      <SubMenu icon={<SettingOutlined />} title="Username">
+        <Item key="setting:1">Option 1</Item>
+        <Item key="setting:2">Option 2</Item>
+      </SubMenu>
+    </Menu>
   );
 };
+
+export default Header;
