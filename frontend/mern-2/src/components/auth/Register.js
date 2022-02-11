@@ -2,14 +2,17 @@ import React, { useState, useEffect } from "react";
 import { auth } from "../../firebase";
 import { toast,  ToastContainer  } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+
 const Register = ({ history }) => {
   const [email, setEmail] = useState("");
 
-//   const { user } = useSelector((state) => ({ ...state }));
+  // to check if user is login in and have info redirect him
+  const { user } = useSelector((state) => ({ ...state }));
 
-//   useEffect(() => {
-//     if (user && user.token) history.push("/");
-//   }, [user, history]);
+  useEffect(() => {
+    if (user && user.token) history.push("/");
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

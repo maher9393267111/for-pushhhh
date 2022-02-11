@@ -12,7 +12,7 @@ import RegisterComplete from './components/auth/RegisterComplete'
 import Overlay from "./components/overlay";
 import Register from "./components/auth/Register";
 import Login from './pages/Login'
-
+import ForgotPassword from "./pages/ForgotPassword";
 
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
@@ -60,6 +60,7 @@ useEffect(() => {
         <Route exact path="/login" component={Login} /> 
         <Route exact path="/register" component={Register} /> 
         <Route exact path="/register/complete" component={RegisterComplete} />
+        <Route exact path="/forgot/password" component={ForgotPassword} />
       </Switch>
 
 

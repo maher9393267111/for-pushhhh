@@ -1,14 +1,27 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { auth,googleAuthProvider  } from "../firebase";
 import { toast } from "react-toastify";
 import { Button } from "antd";
-
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { MailOutlined, GoogleOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+
+
 const Login = ({ history }) => {
   const [email, setEmail] = useState("gqlreactnode@gmail.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
+
+
+  // to check if user is login in and have info redirect him
+  const { user } = useSelector((state) => ({ ...state }));
+
+  useEffect(() => {
+    if (user && user.token) history.push("/");
+  }, [user]);
+
+
 
   let dispatch = useDispatch();
 
@@ -135,7 +148,9 @@ const googleLogin = async () => {
             Login with Google
           </Button>
 
-
+          <Link to="/forgot/password" className="float-right text-danger">
+            Forgot Password
+          </Link>
 
 
         </div>
