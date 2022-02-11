@@ -7,6 +7,9 @@ const cookieParser = require('cookie-parser')
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
+// read files
+const { readdirSync } = require("fs");
+
 require("dotenv").config();
 
 // routes
@@ -34,9 +37,10 @@ app.get("/api", (req, res) => {
 
 
   // routes middleware
-app.use("/api", authRoutes);
+// app.use("/api", authRoutes);
 
 
+readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
 
 
 // connecting with mongodb
