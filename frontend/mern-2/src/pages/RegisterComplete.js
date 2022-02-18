@@ -1,16 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase";
+import { auth } from "../firebase";
 import { toast } from "react-toastify";
-
+import { useDispatch, useSelector } from "react-redux";
+// import { createOrUpdateUser } from "../functions/auth";
+import axios from "axios";
 const RegisterComplete = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { user } = useSelector((state) => ({ ...state }));
+  let dispatch = useDispatch();
 
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForRegistration"));
     // console.log(window.location.href);
     // console.log(window.localStorage.getItem("emailForRegistration"));
   }, []);
+
+//token send to backend
+
+const createOrUpdateUser = async (authtoken) => {
+  return await axios.post(
+    `http://localhost:5000/api/create-or-update-user`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  );
+};
+
+
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,10 +60,29 @@ const RegisterComplete = ({ history }) => {
         window.localStorage.removeItem("emailForRegistration");
         // get user id token
         let user = auth.currentUser;
-        await user.updatePassword(password);
-        const idTokenResult = await user.getIdTokenResult();
+        await user.updatePassword(password); // here you can change your original password
+        const idTokenResult = await user.getIdTokenResult(); // this user token
         // redux store
         console.log("user", user, "idTokenResult", idTokenResult);
+
+
+
+        
+        createOrUpdateUser(idTokenResult.token)
+          .then((res) => {
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: res.data.name,
+                email: res.data.email,
+                token: idTokenResult.token,
+                role: res.data.role,
+                _id: res.data._id,
+              },
+            });
+          })
+          .catch();
+
         // redirect
         history.push("/");
       }

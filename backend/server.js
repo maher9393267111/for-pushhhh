@@ -11,6 +11,11 @@ require("dotenv").config();
 // app
 const app = express();
 
+const catRoute =require('./routes/category')
+const authRoutes =require('./routes/auth')
+const SubRoutes =require('./routes/sub')
+const ProductRoute =require('./routes/product')
+const CloudRoute =require('./routes/cloudinary')
 
 
 // middlewares
@@ -20,14 +25,17 @@ app.use(cors());
 
 
 
-const authRoutes =require('./routes/auth')
+
 
 // routes middleware
 
  app.use('/api',authRoutes)
+app.use('/api',catRoute)
+app.use('/api',SubRoutes)
+app.use('/api',ProductRoute)
+app.use('/api',CloudRoute)
 
-
-//  readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
+//   readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
 
 
 

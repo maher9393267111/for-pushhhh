@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase";
+import { auth } from "../firebase";
 import { toast,  ToastContainer  } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";

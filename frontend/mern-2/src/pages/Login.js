@@ -20,12 +20,27 @@ const Login = ({ history }) => {
   // to check if user is login in and have info redirect him
   const { user } = useSelector((state) => ({ ...state }));
 
-  useEffect(() => {
-    if (user && user.token) history.push("/");
-  }, [user]);
 
 
   let dispatch = useDispatch();
+
+
+  useEffect(() => {
+
+    // if come from page by redirect from that page
+    // dont redirect the user
+    let intended = history.location.state;
+    if (intended) {
+      return;
+    } else {
+// if user is already login in and have token when 
+// login page mounted hemen redirect th user to home page
+
+      if (user && user.token) history.push("/");
+    }
+  }, [user, history]);
+
+
 
 
 // send user info to backend to sava in database
@@ -42,9 +57,35 @@ const createOrUpdateUser = async (authtoken) => {
   );
 };
 
+const roleBasedRedirect = (res) => {
+
+// check if intended 
+
+let intended =history.location.state;
+
+if (intended) {
+
+history.push(intended.from)
+
+
+
+}
+
+
+else{ 
+  if (res.data.role === "admin") {
+    history.push("/admin/dashboard");
+  } else {
+    history.push("/user/history");
+  }
+}
+};
+
+
 
 
 // login in user
+
 
 
 const handleSubmit = async (e) => {
@@ -57,26 +98,33 @@ const handleSubmit = async (e) => {
     const { user } = result;
     const idTokenResult = await user.getIdTokenResult();
 
-
-    // send user token to backend firebase-admin
     createOrUpdateUser(idTokenResult.token)
-      .then((res) => console.log("CREATE OR UPDATE RES", res))
-      .catch();
+      .then((res) => {
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: {
+            name: res.data.name,
+            email: res.data.email,
+            token: idTokenResult.token,
+            role: res.data.role,
+            _id: res.data._id,
+          },
+        });
+        roleBasedRedirect(res);
+      })
+      .catch((error) => console.log(error));
 
-    // dispatch({
-    //   type: "LOGGED_IN_USER",
-    //   payload: {
-    //     email: user.email,
-    //     token: idTokenResult.token,
-    //   },
-    // });
-    // history.push("/");
+    history.push("/");
   } catch (error) {
     console.log(error);
     toast.error(error.message);
     setLoading(false);
   }
 };
+
+
+
+
 
 
 
