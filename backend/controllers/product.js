@@ -127,6 +127,8 @@ exports.list = async (req, res) => {
 // countDocuments   estimatedDocumentCount
 exports.productsCount = async (req, res) => {
   let total = await Product.find({}).countDocuments().exec();
+  console.log('poducts count is here')
+  console.log(total)
   res.json(total);
 };
 
@@ -347,7 +349,7 @@ const handleBrand = async (req, res, brand) => {
 
 exports.searchFilters = async (req, res) => {
   const { query,price,category,stars,sub,color,shipping,brand } = req.body;
-  
+
 console.log(category)
 
 
@@ -403,13 +405,15 @@ if (category){
 
 
 
-
+console.log('query is hereee>>>>>>>>>>')
   if (query) {
     console.log("queryyyyyyyy", query);
+    console.log('quert not found here')
     await handleQuery(req, res, query);
 
 
 
+  
 // price [20, 200]
 
 
@@ -417,6 +421,7 @@ if (category){
 if (price !== undefined) {
   const {price} = req.body;
   console.log("price --->>>>>>>>>> ", price);
+  console.log('price not found here')
   await handlePrice(req, res, price);
 }
 

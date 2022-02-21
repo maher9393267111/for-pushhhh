@@ -16,6 +16,7 @@ const NewArrivals = () => {
 
   useEffect(() => {
     getProductsCount().then((res) => setProductsCount(res.data));
+    console.log(productsCount)
   }, []);
 
   const loadAllProducts = () => {
@@ -23,15 +24,12 @@ const NewArrivals = () => {
     // sort, order, limit
     getProducts("createdAt", "desc", page).then((res) => {
       setProducts(res.data);
-      console.log(page)
       setLoading(false);
     });
   };
 
   return (
     <>
- 
-
       <div className="container">
         {loading ? (
           <LoadingCard count={3} />
@@ -49,9 +47,9 @@ const NewArrivals = () => {
       <div className="row">
         <nav className="col-md-4 offset-md-4 text-center pt-5 p-3">
           <Pagination
-            current={page}
+            current={1}
             total={(productsCount / 3) * 10}
-            onChange={(value) => setPage(value)}
+            onChange={(e) => setPage(e)}
           />
         </nav>
       </div>

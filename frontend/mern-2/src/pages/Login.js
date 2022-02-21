@@ -62,6 +62,11 @@ const roleBasedRedirect = (res) => {
 // check if intended 
 
 let intended =history.location.state;
+// console.log(intended.from)
+// if (intended === 'cart'){
+//   console.log(intended)
+//   history.push('/cart')
+// }
 
 if (intended) {
 
